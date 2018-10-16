@@ -610,7 +610,7 @@ __main__() {
            "-----" \
 
     /usr/bin/logrep \
-    --config /etc/wtop.cfg \
+    --config "${_src}/wtop.cf" \
     --sort '50:1,2,3,4:asc' \
     -q \
     -o 'ip,cc,proto,status,bytes,count(*),url' \
@@ -619,7 +619,7 @@ __main__() {
   elif [[ "$mode_type" == "report" ]] ; then
 
     /usr/bin/logrep \
-    --config /etc/wtop.cfg \
+    --config "${_src}/wtop.cf" \
     -m tail \
     -q \
     -o 'ip,cc,proto,status,bytes,url' \
