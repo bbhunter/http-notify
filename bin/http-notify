@@ -298,19 +298,7 @@ _mail_notify() {
   local _msg="$2"
   local _msg_subject="$3"
 
-  if [[ "$_stype" == "open" ]] ; then
-
-    _trgb="#3D9970"
-
-  elif [[ "$_stype" == "close" ]] ; then
-
-    _trgb="#AAAAAA"
-
-  elif [[ "$_stype" == "error" ]] ; then
-
-    _trgb="#FF4136"
-
-  fi
+  _trgb="#3D9970"
 
   HTML_CONTENT="
 <!DOCTYPE html>
@@ -329,28 +317,24 @@ _mail_notify() {
   <h2>$_msg</h2>
   <div class=\"tg-wrap\"><table class=\"tg\">
   <tr>
-    <th class=\"tg-au0w\">DATETIME</th>
-    <th class=\"tg-au0w\">PAM_TYPE</th>
-    <th class=\"tg-au0w\">PAM_SERVICE</th>
-    <th class=\"tg-au0w\">PAM_TTY</th>
-    <th class=\"tg-au0w\">PAM_USER</th>
-    <th class=\"tg-au0w\">HOSTNAME</th>
-    <th class=\"tg-au0w\">PAM_RHOST</th>
-    <th class=\"tg-au0w\">PPID</th>
-    <th class=\"tg-au0w\">SHELL</th>
-    <th class=\"tg-au0w\">PWD</th>
+    <th class=\"tg-au0w\">DATE</th>
+    <th class=\"tg-au0w\">CLIENT_IP</th>
+    <th class=\"tg-au0w\">CC</th>
+    <th class=\"tg-au0w\">PROTO</th>
+    <th class=\"tg-au0w\">CODE</th>
+    <th class=\"tg-au0w\">BYTES</th>
+    <th class=\"tg-au0w\">COUNT</th>
+    <th class=\"tg-au0w\">PATH</th>
   </tr>
   <tr>
     <td class=\"tg-0pky\">$(date)</td>
-    <td class=\"tg-0pky\">$PAM_TYPE</td>
-    <td class=\"tg-0pky\">$PAM_SERVICE</td>
-    <td class=\"tg-0pky\">$PAM_TTY</td>
-    <td class=\"tg-0pky\">$PAM_USER</td>
-    <td class=\"tg-0pky\">$(hostname)</td>
-    <td class=\"tg-0pky\">$PAM_RHOST</td>
-    <td class=\"tg-0pky\">$PPID</td>
-    <td class=\"tg-0pky\">$SHELL</td>
-    <td class=\"tg-0pky\">$PWD</td>
+    <td class=\"tg-0pky\">$CLIENT_IP</td>
+    <td class=\"tg-0pky\">$CC</td>
+    <td class=\"tg-0pky\">$PROTO</td>
+    <td class=\"tg-0pky\">$CODE</td>
+    <td class=\"tg-0pky\">$BYTES</td>
+    <td class=\"tg-0pky\">$COUNT</td>
+    <td class=\"tg-0pky\">$PATH</td>
   </tr>
   </table></div>
 </body>
