@@ -1,3 +1,14 @@
+# Set log type (format).
+#   - apache
+#   - nginx
+TYPE="apache"
+
+# Set mode.
+#   - stats
+#   - report
+#   - monitor
+MODE="stats"
+
 # Mail notification.
 MAILTO="http-notify@example.com"
 MAILFROM="http-notify@example.com"
