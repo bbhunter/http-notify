@@ -1,0 +1,403 @@
+#!/usr/bin/env bash
+
+# shellcheck shell=bash
+# shellcheck disable=SC1090,SC1091,SC2034,SC2154
+
+### BEG SCRIPT INFO
+#
+# Header:
+#
+#         fname : "http-notify"
+#         cdate : "16.10.2018"
+#        author : "Michał Żurawski <trimstray@gmail.com>"
+#      tab_size : "2"
+#     soft_tabs : "yes"
+#
+# Description:
+#
+#   See README.md file for more information.
+#
+# License:
+#
+#   http-notify, Copyright (C) 2018  Michał Żurawski
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+### END SCRIPT INFO
+
+
+################################################################################
+################## The configuration parameters of the script ##################
+################################################################################
+
+# Bash 'Strict Mode':
+#   errexit  - exit the script if any statement returns a non-true return value
+#   pipefail - exit the script if any command in a pipeline errors
+#   nounset  - exit the script if you try to use an uninitialised variable
+#   xtrace   - display debugging information
+set -o pipefail
+
+# Internal field separator (more flexible):
+#   IFS_ORIG="$IFS"
+#   IFS_HACK=$'\n\t'
+#   IFS="$IFS_HACK"
+
+# PATH env variable setup:
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Setting permissions in the script environment:
+#   0022 - less restrictive settings (default value)
+#   0027 - for better security than above
+#   0077 - only for user access (more restrictive)
+umask 0027
+
+# Set script version.
+readonly _version="v1.0.0"
+
+# Run script only with you're root.
+if_root="true"
+
+# Catch the listed SIGNALS, which may be signal names with or without the SIG
+# prefix, or signal numbers. By default, only the signal 0 or EXIT is supported.
+trap "_get_trap_SIG EXIT" EXIT
+
+# The array that store call parameters.
+__init_params=()
+__script_params=("$@")
+
+# Store the name of the script and directory call.
+readonly _init_name="$(basename "$0")"
+readonly _init_directory="$(dirname "$(readlink -f "$0")")"
+
+# Set root directory.
+readonly _rel="${_init_directory}/.."
+
+# Directory structure.
+readonly _src="${_rel}/src"
+         _tmp="${_rel}/tmp"
+
+
+################################################################################
+####################### Definitions of global functions ########################
+################################################################################
+
+# ``````````````````````````````````````````````````````````````````````````````
+# Function name: _exit_()
+#
+# Description:
+#   Covers the default exit command.
+#
+# Usage:
+#   _exit_ value
+#
+# Examples:
+#   _exit_ 0
+#
+
+_exit_() {
+
+  local _FUNCTION_ID="_exit_"
+  local _STATE="0"
+
+  _STATUS="$1"
+
+  # Remember that for it a trap is executed that intercepts
+  # the exit command (at the end of this function).
+  if [[ "$_STATUS" -eq 0 ]] ; then
+
+    # Add tasks when exiting the code is equal 0.
+    true
+
+  else
+
+    # Add tasks when exiting the code is non equal 0.
+    false
+
+  fi
+
+  exit "$_STATUS"
+
+}
+
+# ``````````````````````````````````````````````````````````````````````````````
+# Function name: _get_trap_SIG()
+#
+# Description:
+#   Ensuring they always perform necessary cleanup operations,
+#   even when something unexpected goes wrong. It can handle
+#   all output signals.
+#
+# Usage:
+#   trap _get_trap_SIG SIGNAL
+#
+# Examples:
+#   trap _get_trap_SIG EXIT
+#   trap "_get_trap_SIG SIGS" SIGHUP SIGTERM
+#
+
+_get_trap_SIG() {
+
+  local _FUNCTION_ID="_get_trap_SIG"
+  local _STATE="${_STATUS:-}"
+
+  local _SIG_type="$1"
+
+  # Remember not to duplicate tasks in the _exit_() and _get_trap_SIG()
+  # functions. Tasks for the _exit_() function only work within it
+  # and refer to the exit mechanism. Tasks in the _get_trap_SIG() function
+  # can refer to specific signal or all signals.
+
+  if [ -z "$_STATE" ] ; then _STATE=254
+
+  # Performs specific actions for the EXIT signal.
+  elif [[ "$_SIG_type" == "EXIT" ]] ; then
+
+    # Unset variables (e.g. global):
+    #   - local _to_unset=("$IFS_ORIG" "$IFS_HACK" "$IFS" "$PATH")
+    local _to_unset=("$PATH")
+
+    for i in "${_to_unset[@]}" ; do unset i ; done
+
+    # You can cover the code supplied from the _exit_() function
+    # (in this case) or set a new one.
+    _STATE="${_STATUS:-}"
+
+  # Performs specific actions fot the other signals.
+  # In this example, using the SIGS string, we mark several output signals
+  # (see the second example in the description of the function).
+  elif [[ "$_SIG_type" == "SIGS" ]] ; then
+
+    # You can cover the code supplied from the function
+    # or set a new one.
+    _STATE="${_STATUS:-}"
+
+  else
+
+    # In this block the kill command was originally used,
+    # however, it suspended the operation of dracnmap.
+    # The lack of this command terminates the process
+    # and does not cause the above problems.
+    _STATE="255"
+
+  fi
+
+  _logger "exit" \
+    "$_FUNCTION_ID > ${_SIG_type} (${_STATE})"
+
+  return "$_STATE"
+
+}
+
+# ``````````````````````````````````````````````````````````````````````````````
+# Function name: _logger()
+#
+# Description:
+#   Saving selected operation states to a log file
+#   and allows you to terminate the script with 'stop' signal.
+#
+#   Four states of message type:
+#     info - normal information
+#     head - normal information (header)
+#     warn - warning information
+#     stop - interrupts script execution
+#
+# Usage:
+#   _logger "type" "message"
+#
+# Examples:
+#   _logger "info" "load config file properly"
+#   _logger "stop" "not connected"
+#
+
+_logger() {
+
+  local _FUNCTION_ID="_logger"
+  local _STATE="0"
+
+  local _type="$1"
+  local _to_log=""
+  local _conv_type=""
+
+  _to_log=$(shift ; echo "$@")
+  _conv_type=$(echo "$_type" | tr '[:lower:]' '[:upper:]')
+
+  if [[ ! -d "$_log_directory" && ! -L "$_log_directory" ]] ; then
+    mkdir -p "$_log_directory" ; fi
+
+  printf "%s  %s:  [%s] %s\\n" \
+         "$(date +"%d/%m/%y %X")" \
+         "$_init_name" \
+         "$_conv_type" \
+         "$_to_log" \
+         >>"$_log_path"
+
+  return "$_STATE"
+
+}
+
+_mail_notify() {
+
+  local _FUNCTION_ID="_mail_notify"
+  local _STATE="0"
+
+  local _stype="$1"
+  local _msg="$2"
+  local _msg_subject="$3"
+
+  if [[ "$_stype" == "open" ]] ; then
+
+    _trgb="#3D9970"
+
+  elif [[ "$_stype" == "close" ]] ; then
+
+    _trgb="#AAAAAA"
+
+  elif [[ "$_stype" == "error" ]] ; then
+
+    _trgb="#FF4136"
+
+  fi
+
+  HTML_CONTENT="
+<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+  <meta charset=\"UTF-8\">
+  <style type=\"text/css\">
+    .tg {width: 75%;border-collapse:collapse;border-spacing:2;border-color:#999;}
+    .tg td{font-family:Arial, sans-serif;font-size:14px;padding:12px 5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;border-top-width:1px;border-bottom-width:1px;border-color:#999;color:#444;background-color:#F7FDFA;}
+    .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:12px 5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;border-top-width:1px;border-bottom-width:1px;border-color:#999;color:#fff;background-color:${_trgb};}
+    .tg .tg-au0w{font-weight:bold;font-size:12px;font-family:Verdana, Geneva, sans-serif !important;;border-color:inherit;text-align:left;vertical-align:top}
+    .tg .tg-0pky{font-size:12px;font-family:monospace;border-color:inherit;text-align:left;vertical-align:top}
+  </style>
+</head>
+<body>
+  <h2>$_msg</h2>
+  <div class=\"tg-wrap\"><table class=\"tg\">
+  <tr>
+    <th class=\"tg-au0w\">DATETIME</th>
+    <th class=\"tg-au0w\">PAM_TYPE</th>
+    <th class=\"tg-au0w\">PAM_SERVICE</th>
+    <th class=\"tg-au0w\">PAM_TTY</th>
+    <th class=\"tg-au0w\">PAM_USER</th>
+    <th class=\"tg-au0w\">HOSTNAME</th>
+    <th class=\"tg-au0w\">PAM_RHOST</th>
+    <th class=\"tg-au0w\">PPID</th>
+    <th class=\"tg-au0w\">SHELL</th>
+    <th class=\"tg-au0w\">PWD</th>
+  </tr>
+  <tr>
+    <td class=\"tg-0pky\">$(date)</td>
+    <td class=\"tg-0pky\">$PAM_TYPE</td>
+    <td class=\"tg-0pky\">$PAM_SERVICE</td>
+    <td class=\"tg-0pky\">$PAM_TTY</td>
+    <td class=\"tg-0pky\">$PAM_USER</td>
+    <td class=\"tg-0pky\">$(hostname)</td>
+    <td class=\"tg-0pky\">$PAM_RHOST</td>
+    <td class=\"tg-0pky\">$PPID</td>
+    <td class=\"tg-0pky\">$SHELL</td>
+    <td class=\"tg-0pky\">$PWD</td>
+  </tr>
+  </table></div>
+</body>
+</html>
+  "
+
+  echo "$HTML_CONTENT" | mail -s "$(echo -e "$_msg_subject - $(hostname)\\nContent-Type: text/html")" "$MAILTO"
+
+  return "$_STATE"
+
+}
+
+
+################################################################################
+######################### Main function (script init) ##########################
+################################################################################
+
+__main__() {
+
+  local _FUNCTION_ID="__main__"
+  local _STATE="0"
+
+  # Stores the current date.
+  readonly _cdate=$(date +%Y%m%d)
+
+  # Variables related to the log file. Divided into three parts due
+  # to the better possibility of manipulation for the user.
+  readonly _log_directory="${_rel}/log"
+
+  readonly _log_file="${_init_name}.${_cdate}.log"
+  readonly _log_path="${_log_directory}/${_log_file}"
+
+  # We check if we are a root user.
+  if [[ "$EUID" -ne 0 ]] && [[ "$if_root" == "true" ]] ; then
+
+    printf "EUID is not equal 0 (no root user)\\n"
+    _exit_ "1"
+
+  fi
+
+  # Running tasks before start user functions.
+  # shellcheck disable=2154
+  cd "$_init_directory" || \
+  _logger "warn" \
+    "${_FUNCTION_ID}()" \
+    "directory change error: '$_init_directory'"
+
+  ################################# USER SPACE #################################
+  # ````````````````````````````````````````````````````````````````````````````
+  # Put here all your variable declarations, function calls
+  # and all the other code blocks.
+
+  # Load configuration file.
+  readonly HTTP_NOTIFY_CONFIG="${_src}/${_init_name}.cf"
+
+  if [[ -e "$HTTP_NOTIFY_CONFIG" ]] ; then
+
+    source "$HTTP_NOTIFY_CONFIG"
+    _kstate="$?"
+
+    if [[ "$_kstate" -ne 0 ]] ; then
+
+      _logger "warn" \
+        "${_FUNCTION_ID}()" \
+        "HTTP_NOTIFY_CONFIG not load properly"
+
+    else
+
+      _logger "info" \
+        "${_FUNCTION_ID}()" \
+        "HTTP_NOTIFY_CONFIG load properly"
+
+    fi
+
+  else
+
+    _logger "warn" \
+      "${_FUNCTION_ID}()" \
+      "HTTP_NOTIFY_CONFIG not exist"
+
+  fi
+
+  # ````````````````````````````````````````````````````````````````````````````
+
+  return "$_STATE"
+
+}
+
+# We pass arguments to the __main__ function.
+# It is required if you want to run on arguments type $1, $2, ...
+__main__ "${__script_params[@]}"
+
+_exit_ "0"

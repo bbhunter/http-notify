@@ -1,0 +1,3 @@
+# Mail notification.
+MAILTO="http-notify@example.com"
+MAILFROM="http-notify@example.com"
