@@ -25,7 +25,7 @@
 
 ## Description
 
-http-notify - keep track of all http activities
+**http-notify** - keep track of all http activities.
 
   > Before use **http-notify** please see **[Requirements](#requirements)**.
 
@@ -53,23 +53,6 @@ http-notify <params>
 ## External tools
 
 **http-notify** support external tools for security scans:
-
-## Docker
-
-The configuration is contained in the **Dockerfile**.
-
-### Build image
-
-```bash
-cd http-notify/build
-docker build --rm -t http-notify -f Dockerfile .
-```
-
-### Run container
-
-```bash
-docker run --rm -it --name http-notify http-notify -d <params>
-```
 
 ## Requirements
 
