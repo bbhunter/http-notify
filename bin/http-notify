@@ -587,6 +587,17 @@ __main__() {
 
   fi
 
+  if [[ "$mode_type" == "report" ]] ; then
+
+    /usr/bin/logrep \
+    --config /etc/wtop.cfg \
+    -m tail \
+    -q \
+    -o 'ip,cc,proto,status,bytes,url' \
+    "$log_type"
+
+  fi
+
   # ````````````````````````````````````````````````````````````````````````````
 
   return "$_STATE"
