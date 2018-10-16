@@ -246,6 +246,49 @@ _logger() {
 
 }
 
+# ``````````````````````````````````````````````````````````````````````````````
+# Function name: _help_()
+#
+# Description:
+#   Help message. Should be consistent with the contents of the file README.md.
+#
+# Usage:
+#   _help_
+#
+# Examples:
+#   _help_
+#
+
+function _help_() {
+
+  local _FUNCTION_ID="_help_"
+  local _STATE=0
+
+  # shellcheck disable=SC2154
+  printf "%s" "
+    $_init_name $_version
+
+  Usage:
+    $_init_name <option|long-option>
+
+  Examples:
+    $_init_name --help
+
+  Options:
+        --help                                show this message
+
+
+  This program comes with ABSOLUTELY NO WARRANTY.
+  This is free software, and you are welcome to redistribute it
+  under certain conditions; for more details please see
+  <http://www.gnu.org/licenses/>.
+
+"
+
+  return $_STATE
+
+}
+
 _mail_notify() {
 
   local _FUNCTION_ID="_mail_notify"
@@ -347,6 +390,55 @@ __main__() {
     _exit_ "1"
 
   fi
+
+  # Specifies the call parameters of the script, the exact description
+  # can be found in _help_ and file README.md.
+  local _short_opt=""
+  local _long_opt="help"
+
+  _GETOPT_PARAMS=$(getopt -o "${_short_opt}" --long "${_long_opt}" \
+                   -n "${_init_name}" -- "${__script_params[@]}")
+
+  # With this structure, in the case of problems with the parameters placed
+  # in the _GETOPT_PARAMS variable we finish the script. Keep this in mind
+  # because it has some consequences - the __main __() function will not be
+  # executed.
+
+  # Ends an error if the parameter or its argument is not valid.
+  _getopt_state="$?"
+  if [ "$_getopt_state" != 0 ] ; then
+    _exit_ "1"
+  # Ends if no parameter is specified.
+  elif [[ "${#__script_params[@]}" -eq 0 ]] ; then
+    _exit_ "0"
+  fi
+
+  eval set -- "$_GETOPT_PARAMS"
+  while true ; do
+
+    case $1 in
+
+      --help)
+
+        _help_
+
+        shift ; _exit_ "0" ;;
+
+      *)
+
+        if [[ "$2" == "-" ]] || [[ ! -z "$2" ]] ; then
+
+          printf "%s: invalid option -- '%s'\\n" "$_init_name" "$2"
+          _exit_ "1"
+
+        # elif [[ -z "$2" ]] ; then break ; fi
+        else break ; fi
+
+        ;;
+
+    esac
+
+  done
 
   # Running tasks before start user functions.
   # shellcheck disable=2154
