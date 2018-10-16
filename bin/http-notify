@@ -591,6 +591,24 @@ __main__() {
 
   if [[ "$mode_type" == "stats" ]] ; then
 
+    printf '%-15s %-7.10s %-15.10s %-7.10s %-7.10s %-7.10s %s\n' \
+           "CLIENT_IP" \
+           "CC" \
+           "PROTO" \
+           "CODE" \
+           "BYTES" \
+           "COUNT" \
+           "PATH"
+
+  printf '%-15s %-7.10s %-15.10s %-7.10s %-7.10s %-7.10s %s\n' \
+         "---------" \
+         "--" \
+         "-----" \
+         "----" \
+         "-----" \
+         "-----" \
+         "-----" \
+
     /usr/bin/logrep \
     --config /etc/wtop.cfg \
     --sort '50:1,2,3,4:asc' \
