@@ -247,7 +247,13 @@ _logger() {
   # This do not have to remember to place the _exit_ <value> function
   # in 'exit' script points. If you prefer to have more control,
   # do not use the _logger function with the 'stop' parameter.
-  if [[ "$_type" == "stop" ]] ; then _exit_ 255 ; fi
+  if [[ "$_type" == "stop" ]] ; then
+
+    printf "%s\\n" "$_to_log"
+
+    _exit_ 255
+
+  fi
 
   return "$_STATE"
 
