@@ -290,7 +290,7 @@ function _help_() {
   Options:
         --help                                show this message
         -t|--type                             http server type: nginx or apache
-        -m|--mode                             mode type: report or monitor
+        -m|--mode                             mode type: stats, report or monitor
         -l|--logfile                          path to logfile
 
 
@@ -559,7 +559,9 @@ __main__() {
 
   fi
 
-  if [[ "$mode_type" == "report" ]] || [[ "$mode_type" == "monitor" ]] ; then
+  if [[ "$mode_type" == "stats" ]] ||
+     [[ "$mode_type" == "report" ]] || \
+     [[ "$mode_type" == "monitor" ]] ; then
 
     _logger "info" \
       "${_FUNCTION_ID}()" \
@@ -587,7 +589,16 @@ __main__() {
 
   fi
 
-  if [[ "$mode_type" == "report" ]] ; then
+  if [[ "$mode_type" == "stats" ]] ; then
+
+    /usr/bin/logrep \
+    --config /etc/wtop.cfg \
+    --sort '50:1,2,3,4:asc' \
+    -q \
+    -o 'ip,cc,proto,status,bytes,count(*),url' \
+    "$log_type"
+
+  elif [[ "$mode_type" == "report" ]] ; then
 
     /usr/bin/logrep \
     --config /etc/wtop.cfg \
