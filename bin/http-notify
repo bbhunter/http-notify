@@ -532,6 +532,48 @@ __main__() {
 
   fi
 
+  if [[ "$type_type" == "nginx" ]] || [[ "$type_type" == "apache" ]] ; then
+
+    _logger "info" \
+      "${_FUNCTION_ID}()" \
+      "set properly http server type: $type_type"
+
+  else
+
+    _logger "stop" \
+      "${_FUNCTION_ID}()" \
+      "unknown http server type"
+
+  fi
+
+  if [[ "$mode_type" == "report" ]] || [[ "$mode_type" == "monitor" ]] ; then
+
+    _logger "info" \
+      "${_FUNCTION_ID}()" \
+      "set properly mode type: $mode_type"
+
+  else
+
+    _logger "stop" \
+      "${_FUNCTION_ID}()" \
+      "unknown mode type"
+
+  fi
+
+  if [[ -e "$log_type" ]] ; then
+
+    _logger "info" \
+      "${_FUNCTION_ID}()" \
+      "log file exist: $log_type"
+
+  else
+
+    _logger "stop" \
+      "${_FUNCTION_ID}()" \
+      "log file not exist"
+
+  fi
+
   # ````````````````````````````````````````````````````````````````````````````
 
   return "$_STATE"
