@@ -2,10 +2,6 @@
 
 <br>
 
-**http-notify** - keep track of all http activities.
-
-<br>
-
 <p align="left">
   <a href="https://img.shields.io/badge/Branch-master-green.svg">
     <img src="https://img.shields.io/badge/Branch-master-green.svg"
