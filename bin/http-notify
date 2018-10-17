@@ -339,26 +339,53 @@ std_headers() {
   local _FUNCTION_ID="std_notify"
   local _STATE="0"
 
+  local _type="$1"
+
   # shellcheck disable=SC2034
   local h_trgb="1;2;36"
+  # shellcheck disable=SC2034
+  local p_trgb="2;2;37"
 
-  printf '\e['${h_trgb}'m%-15s %-7.10s %-15.10s %-7.10s %-7.10s %-7.10s %s\e[m\n' \
-         "CLIENT_IP" \
-         "CC" \
-         "PROTO" \
-         "CODE" \
-         "BYTES" \
-         "COUNT" \
-         "PATH"
+  if [[ "$_type" == "stats" ]] ; then
 
-  printf '%-15s %-7.10s %-15.10s %-7.10s %-7.10s %-7.10s %s\n' \
-         "---------" \
-         "--" \
-         "-----" \
-         "----" \
-         "-----" \
-         "-----" \
-         "----" \
+    printf '\e['${h_trgb}'m%-15s %-7.10s %-15.10s %-7.10s %-7.10s %-7.10s %s\e[m\n' \
+           "CLIENT_IP" \
+           "CC" \
+           "PROTO" \
+           "CODE" \
+           "BYTES" \
+           "COUNT" \
+           "PATH"
+
+    printf '\e['${p_trgb}'m%-15s %-7.10s %-15.10s %-7.10s %-7.10s %s\e[m\n' \
+           "---------" \
+           "--" \
+           "-----" \
+           "----" \
+           "-----" \
+           "-----" \
+           "----" \
+
+  elif [[ "$_type" == "monitor" ]] ; then
+
+    printf '\e['${h_trgb}'m%-15s %-7.10s %-15.10s %-7.10s %-7.10s %s\e[m\n' \
+           "CLIENT_IP" \
+           "CC" \
+           "PROTO" \
+           "CODE" \
+           "BYTES" \
+           "PATH"
+
+    printf '\e['${p_trgb}'m%-15s %-7.10s %-15.10s %-7.10s %-7.10s %s\e[m\n' \
+           "---------" \
+           "--" \
+           "-----" \
+           "----" \
+           "-----" \
+           "-----" \
+           "----" \
+
+  fi
 
   return "$_STATE"
 
@@ -650,7 +677,7 @@ __main__() {
 
   if [[ "$mode_type" == "stats" ]] ; then
 
-    std_headers
+    std_headers "$mode_type"
 
     logrep \
     --config "${_src}/wtop.cfg" \
@@ -661,7 +688,7 @@ __main__() {
 
   elif [[ "$mode_type" == "monitor" ]] ; then
 
-    std_headers
+    std_headers "$mode_type"
 
     logrep \
     --config "${_src}/wtop.cfg" \
