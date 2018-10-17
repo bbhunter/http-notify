@@ -761,11 +761,15 @@ __main__() {
   fi
 
   # Remove temporary file.
-  rm -fr "$_tmpA"
+  if [[ -e "$_tmpA" ]] ; then
 
-  _logger "info" \
-    "${_FUNCTION_ID}()" \
-    "remove temporary file: $_tmpA"
+    rm -fr "$_tmpA"
+
+    _logger "info" \
+      "${_FUNCTION_ID}()" \
+      "remove temporary file: $_tmpA"
+
+  fi
 
   # ````````````````````````````````````````````````````````````````````````````
 
