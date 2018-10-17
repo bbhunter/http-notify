@@ -413,19 +413,18 @@ std_headers() {
 #   Send mail with report.
 #
 # Usage:
-#   std_notify
+#   std_notify "message_header" "message_subject"
 #
 # Examples:
-#   std_notify
+#   std_notify "INFO" "New message"
 #
 std_notify() {
 
   local _FUNCTION_ID="std_notify"
   local _STATE="0"
 
-  local _stype="$1"
-  local _msg="$2"
-  local _msg_subject="$3"
+  local _msg_header="$1"
+  local _msg_subject="$2"
 
   _trgb="#3D9970"
 
@@ -443,7 +442,7 @@ std_notify() {
   </style>
 </head>
 <body>
-  <h2>$_msg</h2>
+  <h2>$_msg_header</h2>
   <div class=\"tg-wrap\"><table class=\"tg\">
   <tr>
     <th class=\"tg-au0w\">client_ip</th>
@@ -500,7 +499,7 @@ std_changes() {
 
     if [[ "$_kstate" -eq 0 ]] ; then
 
-      echo ok
+      std_notify "ALERT" "ssh-notify: detected by filter in monitor mode"
 
     fi
 
