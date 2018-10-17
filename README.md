@@ -65,7 +65,7 @@ Provides the following options:
   Examples:
     http-notify --help
     http-notify -m stats -l /var/log/httpd/access_log
-    http-notify -m monitor -l /var/log/httpd/access_log -f \"login\" --mailto admin@example.com
+    http-notify -m monitor -l /var/log/httpd/access_log -f "login" --mailto admin@example.com
 
   Options:
         --help                                show this message
