@@ -32,6 +32,12 @@ cd http-notify
 
 # Run the app
 http-notify -m monitor -l /var/log/httpd/access_log -f "login" --mailto admin@example.com
+
+client_ip      cc  proto     code    bytes   path
+---------      --  -----     ----    -----   ----
+216.58.215.28  PL  HTTP/1.0  200     11429   /index.php/login
+45.233.49.119  PL  HTTP/2.0  200     10522   /admin/login
+...
 ```
 
 ## Requirements
