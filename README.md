@@ -44,15 +44,11 @@ cd http-notify
 ./setup.sh install
 
 # Run the app
-http-notify <params>
+http-notify -m monitor -l /var/log/httpd/access_log -f "login" --mailto admin@example.com
 ```
 
 > * symlink to `bin/http-notify` is placed in `/usr/local/bin`
 > * man page is placed in `/usr/local/man/man8`
-
-## External tools
-
-**http-notify** support external tools for security scans:
 
 ## Requirements
 
@@ -68,14 +64,20 @@ Provides the following options:
 ```bash
     http-notify v1.0.0
 
-Usage:
+  Usage:
     http-notify <option|long-option>
 
   Examples:
     http-notify --help
+    http-notify -m stats -l /var/log/httpd/access_log
+    http-notify -m monitor -l /var/log/httpd/access_log -f \"login\" --mailto admin@example.com
 
   Options:
         --help                                show this message
+        -m|--mode                             set mode type: stats or monitor
+        -l|--logfile                          set path to logfile
+        -f|--filter                           set filter (e.g. by url)
+        --mailto                              set mail recipient
 ```
 
 ## Contributing

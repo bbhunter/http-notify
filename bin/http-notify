@@ -319,6 +319,8 @@ function _help_() {
 
   Examples:
     $_init_name --help
+    $_init_name -m stats -l /var/log/httpd/access_log
+    $_init_name -m monitor -l /var/log/httpd/access_log -f \"login\" --mailto admin@example.com
 
   Options:
         --help                                show this message
