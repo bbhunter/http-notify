@@ -342,20 +342,20 @@ std_headers() {
   local _type="$1"
 
   # shellcheck disable=SC2034
-  local x_trgb="4;1;33"
+  local x_trgb="1;1;33"
   # shellcheck disable=SC2034
   local p_trgb="2;2;37"
 
   if [[ "$_type" == "stats" ]] ; then
 
     printf '\e['${x_trgb}'m%-15s %-7.10s %-15.10s %-7.10s %-7.10s %-7.10s %s\e[m\n' \
-           "CLIENT_IP" \
-           "CC" \
-           "PROTO" \
-           "CODE" \
-           "BYTES" \
-           "COUNT" \
-           "PATH"
+           "client_ip" \
+           "cc" \
+           "proto" \
+           "code" \
+           "bytes" \
+           "count" \
+           "path"
 
     printf '\e['${p_trgb}'m%-15s %-7.10s %-15.10s %-7.10s %-7.10s %s\e[m\n' \
            "---------" \
@@ -369,12 +369,12 @@ std_headers() {
   elif [[ "$_type" == "monitor" ]] ; then
 
     printf '\e['${x_trgb}'m%-15s %-7.10s %-15.10s %-7.10s %-7.10s %s\e[m\n' \
-           "CLIENT_IP" \
-           "CC" \
-           "PROTO" \
-           "CODE" \
-           "BYTES" \
-           "PATH"
+           "client_ip" \
+           "cc" \
+           "proto" \
+           "code" \
+           "bytes" \
+           "path"
 
     printf '\e['${p_trgb}'m%-15s %-7.10s %-15.10s %-7.10s %-7.10s %s\e[m\n' \
            "---------" \
