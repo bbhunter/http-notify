@@ -357,7 +357,7 @@ std_headers() {
            "count" \
            "path"
 
-    printf '\e['${p_trgb}'m%-15s %-7.10s %-15.10s %-7.10s %-7.10s %s\e[m\n' \
+    printf '\e['${p_trgb}'m%-15s %-7.10s %-15.10s %-7.10s %-7.10s %-7.10s %s\e[m\n' \
            "---------" \
            "--" \
            "-----" \
