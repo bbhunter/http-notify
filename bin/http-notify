@@ -87,9 +87,13 @@ readonly _rel="${_init_directory}/.."
 readonly _src="${_rel}/src"
          _tmp="${_rel}/tmp"
 
+# shellcheck disable=SC2154
+# Temporary output file.
+readonly _tmpA=$(mktemp "${_tmp}/output.XXXXXXXX")
+
 # We place here used commands at script runtime, as strings to anything
 # unnecessarily run.
-readonly commands=(logrep)
+readonly commands=(mktemp logrep)
 
 # If you intend to specify the full path to the command we do it like:
 # readonly exec_gzip="/bin/gzip"
@@ -667,7 +671,8 @@ __main__() {
     -q \
     -o 'ip,cc,proto,status,bytes,count(*),url' \
     "$log_type" | \
-    grep "$filter_type"
+    grep "$filter_type" | \
+    tee -a "$_tmpA"
 
   elif [[ "$mode_type" == "monitor" ]] ; then
 
@@ -680,7 +685,8 @@ __main__() {
     --line-buffered \
     -o 'ip,cc,proto,status,bytes,url' \
     "$log_type" | \
-    grep "$filter_type"
+    grep "$filter_type" | \
+    tee -a "$_tmpA"
 
   fi
 

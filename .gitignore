@@ -3,5 +3,5 @@ log/*
 !/log/.gitkeep
 
 # Temporary files.
-# tmp/*
-# !/tmp/.gitkeep
+tmp/*
+!/tmp/.gitkeep
