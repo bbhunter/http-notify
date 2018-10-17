@@ -87,6 +87,35 @@ readonly _rel="${_init_directory}/.."
 readonly _src="${_rel}/src"
          _tmp="${_rel}/tmp"
 
+# We place here used commands at script runtime, as strings to anything
+# unnecessarily run.
+readonly commands=(logrep)
+
+# If you intend to specify the full path to the command we do it like:
+# readonly exec_gzip="/bin/gzip"
+
+# Stores the names of the missing commands.
+missing_hash=()
+missing_counter="0"
+
+for i in "${commands[@]}" ; do
+
+  if [[ ! -z "$i" ]] ; then
+
+    hash "$i" >/dev/null 2>&1 ; state="$?"
+
+    # If the command was not found put it in the array
+    if [[ "$state" -ne 0 ]] ; then
+
+      missing_hash+=("$i")
+      ((missing_counter++))
+
+    fi
+
+  fi
+
+done
+
 
 ################################################################################
 ####################### Definitions of global functions ########################
@@ -609,8 +638,8 @@ __main__() {
            "-----" \
            "-----" \
 
-    /usr/bin/logrep \
-    --config "${_src}/wtop.cf" \
+    logrep \
+    --config "${_src}/wtop.cfg" \
     --sort '50:1,2,3,4:asc' \
     -q \
     -o 'ip,cc,proto,status,bytes,count(*),url' \
@@ -618,8 +647,8 @@ __main__() {
 
   elif [[ "$mode_type" == "report" ]] ; then
 
-    /usr/bin/logrep \
-    --config "${_src}/wtop.cf" \
+    logrep \
+    --config "${_src}/wtop.cfg" \
     -m tail \
     -q \
     -o 'ip,cc,proto,status,bytes,url' \
