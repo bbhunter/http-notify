@@ -40,7 +40,7 @@ This tool working with:
 
 - **GNU/Linux** (testing on Debian and CentOS)
 - **[Bash](https://www.gnu.org/software/bash/)** (testing on 4.4.19)
-- **[wtop](https://github.com/ClockworkNet/wtop)**
+- **[wtop](https://github.com/ClockworkNet/wtop)** (testing on 0.7.11)
 
 ### wtop/logrep installation
 
