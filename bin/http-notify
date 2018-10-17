@@ -318,9 +318,8 @@ function _help_() {
 
   Options:
         --help                                show this message
-        -t|--type                             http server type: nginx or apache
-        -m|--mode                             mode type: stats or monitor
-        -l|--logfile                          path to logfile
+        -m|--mode                             set mode type: stats or monitor
+        -l|--logfile                          set path to logfile
         -f|--filter                           set filter (e.g. by url)
 
 
@@ -419,17 +418,15 @@ std_notify() {
   <h2>$_msg</h2>
   <div class=\"tg-wrap\"><table class=\"tg\">
   <tr>
-    <th class=\"tg-au0w\">DATE</th>
-    <th class=\"tg-au0w\">CLIENT_IP</th>
-    <th class=\"tg-au0w\">CC</th>
-    <th class=\"tg-au0w\">PROTO</th>
-    <th class=\"tg-au0w\">CODE</th>
-    <th class=\"tg-au0w\">BYTES</th>
-    <th class=\"tg-au0w\">COUNT</th>
-    <th class=\"tg-au0w\">PATH</th>
+    <th class=\"tg-au0w\">client_ip</th>
+    <th class=\"tg-au0w\">cc</th>
+    <th class=\"tg-au0w\">proto</th>
+    <th class=\"tg-au0w\">code</th>
+    <th class=\"tg-au0w\">bytes</th>
+    <th class=\"tg-au0w\">count</th>
+    <th class=\"tg-au0w\">path</th>
   </tr>
   <tr>
-    <td class=\"tg-0pky\">$(date)</td>
     <td class=\"tg-0pky\">$CLIENT_IP</td>
     <td class=\"tg-0pky\">$CC</td>
     <td class=\"tg-0pky\">$PROTO</td>
@@ -484,8 +481,8 @@ __main__() {
 
   # Specifies the call parameters of the script, the exact description
   # can be found in _help_ and file README.md.
-  local _short_opt="t:m:l:f:"
-  local _long_opt="help,type:,mode:,logfile:,filter:"
+  local _short_opt="m:l:f:"
+  local _long_opt="help,mode:,logfile:,filter:"
 
   _GETOPT_PARAMS=$(getopt -o "${_short_opt}" --long "${_long_opt}" \
                    -n "${_init_name}" -- "${__script_params[@]}")
@@ -514,14 +511,6 @@ __main__() {
         _help_
 
         shift ; _exit_ "0" ;;
-
-      -t|--type)
-
-        export type_state=1
-
-        export type_type="${2}"
-
-        shift 2 ;;
 
       -m|--mode)
 
@@ -568,7 +557,7 @@ __main__() {
   # or selected parameters without which the script can not work properly
   # have been used. Do not add the load_state variable to the _opt_values array,
   # which is supported above.
-  _opt_values=("type_state" "mode_state" "log_state")
+  _opt_values=("mode_state" "log_state")
 
   # Checking the value of the variables (if they are unset or empty):
   #   - variables for call parameters
@@ -636,21 +625,6 @@ __main__() {
     _logger "warn" \
       "${_FUNCTION_ID}()" \
       "HTTP_NOTIFY_CONFIG not exist"
-
-  fi
-
-  # Check script params.
-  if [[ "$type_type" == "nginx" ]] || [[ "$type_type" == "apache" ]] ; then
-
-    _logger "info" \
-      "${_FUNCTION_ID}()" \
-      "set properly http server type: $type_type"
-
-  else
-
-    _logger "stop" \
-      "${_FUNCTION_ID}()" \
-      "unknown http server type"
 
   fi
 
