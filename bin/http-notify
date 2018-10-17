@@ -342,7 +342,7 @@ std_headers() {
   local _type="$1"
 
   # shellcheck disable=SC2034
-  local x_trgb="1;2;38"
+  local x_trgb="4;1;33"
   # shellcheck disable=SC2034
   local p_trgb="2;2;37"
 
@@ -382,7 +382,7 @@ std_headers() {
            "-----" \
            "----" \
            "-----" \
-           "-----"
+           "----"
 
   fi
 
