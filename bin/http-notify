@@ -671,8 +671,8 @@ __main__() {
     -q \
     -o 'ip,cc,proto,status,bytes,count(*),url' \
     "$log_type" | \
-    grep "$filter_type" | \
-    tee -a "$_tmpA"
+    tee -a "$_tmpA" | \
+    grep "$filter_type"
 
   elif [[ "$mode_type" == "monitor" ]] ; then
 
@@ -685,8 +685,8 @@ __main__() {
     --line-buffered \
     -o 'ip,cc,proto,status,bytes,url' \
     "$log_type" | \
-    grep "$filter_type" | \
-    tee -a "$_tmpA"
+    tee -a "$_tmpA" | \
+    grep "$filter_type"
 
   fi
 
