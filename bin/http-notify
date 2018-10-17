@@ -338,6 +338,18 @@ function _help_() {
 
 }
 
+# ``````````````````````````````````````````````````````````````````````````````
+# Function name: std_headers()
+#
+# Description:
+#   Print headers.
+#
+# Usage:
+#   std_headers
+#
+# Examples:
+#   std_headers
+#
 std_headers() {
 
   local _FUNCTION_ID="std_notify"
@@ -394,6 +406,18 @@ std_headers() {
 
 }
 
+# ``````````````````````````````````````````````````````````````````````````````
+# Function name: std_notify()
+#
+# Description:
+#   Send mail with report.
+#
+# Usage:
+#   std_notify
+#
+# Examples:
+#   std_notify
+#
 std_notify() {
 
   local _FUNCTION_ID="std_notify"
@@ -450,6 +474,41 @@ std_notify() {
 
 }
 
+# ``````````````````````````````````````````````````````````````````````````````
+# Function name: std_changes()
+#
+# Description:
+#   Monitor changes in file.
+#
+# Usage:
+#   std_changes "filename"
+#
+# Examples:
+#   std_changes "$_tmpA"
+#
+std_changes() {
+
+  local _FUNCTION_ID="std_notify"
+  local _STATE="0"
+
+  local _fd="$1"
+
+  while IFS= read -r line ; do
+
+    echo "$line" | grep "$filter_type" >/dev/null 2>&1
+    _kstate="$?"
+
+    if [[ "$_kstate" -eq 0 ]] ; then
+
+      echo ok
+
+    fi
+
+  done < <(tail -f -n 1 "$_fd")
+
+  return "$_STATE"
+
+}
 
 ################################################################################
 ######################### Main function (script init) ##########################
@@ -661,6 +720,8 @@ __main__() {
 
   fi
 
+  touch "$_tmpA"
+
   if [[ "$mode_type" == "stats" ]] ; then
 
     std_headers "$mode_type"
@@ -679,6 +740,8 @@ __main__() {
     grep "$filter_type"
 
   elif [[ "$mode_type" == "monitor" ]] ; then
+
+    std_changes "$_tmpA" &
 
     std_headers "$mode_type"
 
