@@ -614,8 +614,6 @@ __main__() {
 
         export mailto_type="${2}"
 
-        MAILTO="$mailto_type"
-
         shift 2 ;;
 
       *)
@@ -759,6 +757,8 @@ __main__() {
     grep "$filter_type"
 
   elif [[ "$mode_type" == "monitor" ]] ; then
+
+    MAILTO="$mailto_type"
 
     std_changes "$_tmpA" &
 
