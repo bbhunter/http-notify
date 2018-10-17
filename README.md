@@ -11,8 +11,8 @@
     <img src="https://img.shields.io/badge/Branch-master-green.svg"
         alt="Branch">
   </a>
-  <a href="https://github.com/trimstray/http-notify">
-    <img src="https://github.com/trimstray/http-notify.svg?branch=master"
+  <a href="https://travis-ci.org/trimstray/http-notify">
+    <img src="https://travis-ci.org/trimstray/http-notify.svg?branch=master"
         alt="Travis-CI">
   </a>
 </p>
