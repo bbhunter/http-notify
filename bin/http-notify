@@ -319,7 +319,7 @@ function _help_() {
   Options:
         --help                                show this message
         -t|--type                             http server type: nginx or apache
-        -m|--mode                             mode type: stats, report or monitor
+        -m|--mode                             mode type: stats or monitor
         -l|--logfile                          path to logfile
 
 
@@ -574,6 +574,7 @@ __main__() {
 
   fi
 
+  # Check script params.
   if [[ "$type_type" == "nginx" ]] || [[ "$type_type" == "apache" ]] ; then
 
     _logger "info" \
@@ -645,12 +646,31 @@ __main__() {
     -o 'ip,cc,proto,status,bytes,count(*),url' \
     "$log_type"
 
-  elif [[ "$mode_type" == "report" ]] ; then
+  elif [[ "$mode_type" == "monitor" ]] ; then
+
+    printf '%-15s %-7.10s %-15.10s %-7.10s %-7.10s %-7.10s %s\n' \
+           "CLIENT_IP" \
+           "CC" \
+           "PROTO" \
+           "CODE" \
+           "BYTES" \
+           "COUNT" \
+           "PATH"
+
+    printf '%-15s %-7.10s %-15.10s %-7.10s %-7.10s %-7.10s %s\n' \
+           "---------" \
+           "--" \
+           "-----" \
+           "----" \
+           "-----" \
+           "-----" \
+           "-----" \
 
     logrep \
     --config "${_src}/wtop.cfg" \
     -m tail \
     -q \
+    --line-buffered \
     -o 'ip,cc,proto,status,bytes,url' \
     "$log_type"
 
