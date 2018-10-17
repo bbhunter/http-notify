@@ -342,13 +342,13 @@ std_headers() {
   local _type="$1"
 
   # shellcheck disable=SC2034
-  local h_trgb="1;2;36"
+  local x_trgb="1;2;38"
   # shellcheck disable=SC2034
   local p_trgb="2;2;37"
 
   if [[ "$_type" == "stats" ]] ; then
 
-    printf '\e['${h_trgb}'m%-15s %-7.10s %-15.10s %-7.10s %-7.10s %-7.10s %s\e[m\n' \
+    printf '\e['${x_trgb}'m%-15s %-7.10s %-15.10s %-7.10s %-7.10s %-7.10s %s\e[m\n' \
            "CLIENT_IP" \
            "CC" \
            "PROTO" \
@@ -364,11 +364,11 @@ std_headers() {
            "----" \
            "-----" \
            "-----" \
-           "----" \
+           "----"
 
   elif [[ "$_type" == "monitor" ]] ; then
 
-    printf '\e['${h_trgb}'m%-15s %-7.10s %-15.10s %-7.10s %-7.10s %s\e[m\n' \
+    printf '\e['${x_trgb}'m%-15s %-7.10s %-15.10s %-7.10s %-7.10s %s\e[m\n' \
            "CLIENT_IP" \
            "CC" \
            "PROTO" \
@@ -382,8 +382,7 @@ std_headers() {
            "-----" \
            "----" \
            "-----" \
-           "-----" \
-           "----" \
+           "-----"
 
   fi
 
