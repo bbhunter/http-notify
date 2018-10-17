@@ -26,6 +26,11 @@ git clone https://github.com/trimstray/http-notify
 # Go into the repository
 cd http-notify
 
+# Edit src/wtop.cfg
+#   - set properly log format (LOG_FORMAT)
+#   - set properly log directory (LOG_ROOT)
+#   - set properly log filename (LOG_FILE)
+
 # Run the app
 ./bin/http-notify -m monitor -l /var/log/httpd/access_log -f "login" --mailto admin@example.com
 
