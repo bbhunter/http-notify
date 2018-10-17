@@ -445,7 +445,7 @@ std_notify() {
   </style>
 </head>
 <body>
-  <h2>$_msg</h2>
+  <h2>$_msg_header</h2>
   <div class=\"tg-wrap\"><table class=\"tg\">
   <tr>
     <th class=\"tg-au0w\" width=120px>client_ip</th>
