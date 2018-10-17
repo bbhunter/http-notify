@@ -590,7 +590,6 @@ __main__() {
   fi
 
   if [[ "$mode_type" == "stats" ]] ||
-     [[ "$mode_type" == "report" ]] || \
      [[ "$mode_type" == "monitor" ]] ; then
 
     _logger "info" \
