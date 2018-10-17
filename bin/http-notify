@@ -334,9 +334,39 @@ function _help_() {
 
 }
 
-_mail_notify() {
+std_headers() {
 
-  local _FUNCTION_ID="_mail_notify"
+  local _FUNCTION_ID="std_notify"
+  local _STATE="0"
+
+  # shellcheck disable=SC2034
+  local h_trgb="1;2;36"
+
+  printf '\e['${h_trgb}'m%-15s %-7.10s %-15.10s %-7.10s %-7.10s %-7.10s %s\e[m\n' \
+         "CLIENT_IP" \
+         "CC" \
+         "PROTO" \
+         "CODE" \
+         "BYTES" \
+         "COUNT" \
+         "PATH"
+
+  printf '%-15s %-7.10s %-15.10s %-7.10s %-7.10s %-7.10s %s\n' \
+         "---------" \
+         "--" \
+         "-----" \
+         "----" \
+         "-----" \
+         "-----" \
+         "----" \
+
+  return "$_STATE"
+
+}
+
+std_notify() {
+
+  local _FUNCTION_ID="std_notify"
   local _STATE="0"
 
   local _stype="$1"
@@ -620,23 +650,7 @@ __main__() {
 
   if [[ "$mode_type" == "stats" ]] ; then
 
-    printf '%-15s %-7.10s %-15.10s %-7.10s %-7.10s %-7.10s %s\n' \
-           "CLIENT_IP" \
-           "CC" \
-           "PROTO" \
-           "CODE" \
-           "BYTES" \
-           "COUNT" \
-           "PATH"
-
-    printf '%-15s %-7.10s %-15.10s %-7.10s %-7.10s %-7.10s %s\n' \
-           "---------" \
-           "--" \
-           "-----" \
-           "----" \
-           "-----" \
-           "-----" \
-           "-----" \
+    std_headers
 
     logrep \
     --config "${_src}/wtop.cfg" \
@@ -647,23 +661,7 @@ __main__() {
 
   elif [[ "$mode_type" == "monitor" ]] ; then
 
-    printf '%-15s %-7.10s %-15.10s %-7.10s %-7.10s %-7.10s %s\n' \
-           "CLIENT_IP" \
-           "CC" \
-           "PROTO" \
-           "CODE" \
-           "BYTES" \
-           "COUNT" \
-           "PATH"
-
-    printf '%-15s %-7.10s %-15.10s %-7.10s %-7.10s %-7.10s %s\n' \
-           "---------" \
-           "--" \
-           "-----" \
-           "----" \
-           "-----" \
-           "-----" \
-           "-----" \
+    std_headers
 
     logrep \
     --config "${_src}/wtop.cfg" \
