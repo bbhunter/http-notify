@@ -2,7 +2,7 @@
 
 <br>
 
-<p align="center">
+<p align="left">
   <a href="https://img.shields.io/badge/Branch-master-green.svg">
     <img src="https://img.shields.io/badge/Branch-master-green.svg"
         alt="Branch">

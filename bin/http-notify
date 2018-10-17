@@ -426,15 +426,15 @@ std_notify() {
   local _msg_header="$1"
   local _msg_subject="$2"
 
-  _trgb="#3D9970"
+  _trgb="#007EA7"
 
-  HTML_CONTENT="
+  _CONTENT="
 <!DOCTYPE html>
 <html lang=\"en\">
 <head>
   <meta charset=\"UTF-8\">
   <style type=\"text/css\">
-    .tg {width: 75%;border-collapse:collapse;border-spacing:2;border-color:#999;}
+    .tg {width: 100%;border-collapse:collapse;border-spacing:2;border-color:#999;}
     .tg td{font-family:Arial, sans-serif;font-size:14px;padding:12px 5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;border-top-width:1px;border-bottom-width:1px;border-color:#999;color:#444;background-color:#F7FDFA;}
     .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:12px 5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;border-top-width:1px;border-bottom-width:1px;border-color:#999;color:#fff;background-color:${_trgb};}
     .tg .tg-au0w{font-weight:bold;font-size:12px;font-family:Verdana, Geneva, sans-serif !important;;border-color:inherit;text-align:left;vertical-align:top}
@@ -442,32 +442,35 @@ std_notify() {
   </style>
 </head>
 <body>
-  <h2>$_msg_header</h2>
+  <h2>$_msg</h2>
   <div class=\"tg-wrap\"><table class=\"tg\">
   <tr>
-    <th class=\"tg-au0w\">client_ip</th>
-    <th class=\"tg-au0w\">cc</th>
-    <th class=\"tg-au0w\">proto</th>
-    <th class=\"tg-au0w\">code</th>
-    <th class=\"tg-au0w\">bytes</th>
-    <th class=\"tg-au0w\">count</th>
-    <th class=\"tg-au0w\">path</th>
+    <th class=\"tg-au0w\" width=120px>client_ip</th>
+    <th class=\"tg-au0w\" width=120px>cc</th>
+    <th class=\"tg-au0w\" width=120px>proto</th>
+    <th class=\"tg-au0w\" width=120px>code</th>
+    <th class=\"tg-au0w\" width=120px>bytes</th>
+    <th class=\"tg-au0w\" width=400px>path</th>
   </tr>
   <tr>
-    <td class=\"tg-0pky\">$CLIENT_IP</td>
-    <td class=\"tg-0pky\">$CC</td>
-    <td class=\"tg-0pky\">$PROTO</td>
-    <td class=\"tg-0pky\">$CODE</td>
-    <td class=\"tg-0pky\">$BYTES</td>
-    <td class=\"tg-0pky\">$COUNT</td>
-    <td class=\"tg-0pky\">$PATH</td>
+    <td class=\"tg-0pky\">$(echo "$line" | awk '{print $1}')</td>
+    <td class=\"tg-0pky\">$(echo "$line" | awk '{print $2}')</td>
+    <td class=\"tg-0pky\">$(echo "$line" | awk '{print $3}')</td>
+    <td class=\"tg-0pky\">$(echo "$line" | awk '{print $4}')</td>
+    <td class=\"tg-0pky\">$(echo "$line" | awk '{print $5}')</td>
+    <td class=\"tg-0pky\">$(echo "$line" | awk '{print $6}')</td>
   </tr>
   </table></div>
 </body>
 </html>
   "
 
-  echo "$HTML_CONTENT" | mail -s "$(echo -e "$_msg_subject - $(hostname)\\nContent-Type: text/html")" "$MAILTO"
+  echo "$_CONTENT" > "${_tmp}/message.html"
+
+  # echo "$_CONTENT" | mail -s "$(echo -e "$_msg_subject - $(hostname)\\nContent-Type: text/html")" "$MAILTO"
+  mail -s "$(echo -e "$_msg_subject\\nContent-Type: text/html")" "$MAILTO" <"${_tmp}/message.html"
+
+  if [[ -e "${_tmp}/message.html" ]] ; then rm -fr "${_tmp}/message.html" ; fi
 
   return "$_STATE"
 
@@ -499,7 +502,7 @@ std_changes() {
 
     if [[ "$_kstate" -eq 0 ]] ; then
 
-      std_notify "ALERT" "ssh-notify: detected by filter in monitor mode"
+      std_notify "ALERT" "http-notify: detected by filter in monitor mode"
 
     fi
 
