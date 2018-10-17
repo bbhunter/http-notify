@@ -325,6 +325,7 @@ function _help_() {
         -m|--mode                             set mode type: stats or monitor
         -l|--logfile                          set path to logfile
         -f|--filter                           set filter (e.g. by url)
+        --mailto                              set mail recipient
 
 
   This program comes with ABSOLUTELY NO WARRANTY.
@@ -502,7 +503,11 @@ std_changes() {
 
     if [[ "$_kstate" -eq 0 ]] ; then
 
-      std_notify "ALERT" "http-notify: detected by filter in monitor mode"
+      if [[ "$mailto_state" -eq 1 ]] ; then
+
+        std_notify "HTTP ALERT" "http-notify: detected by filter in monitor mode"
+
+      fi
 
     fi
 
@@ -547,7 +552,7 @@ __main__() {
   # Specifies the call parameters of the script, the exact description
   # can be found in _help_ and file README.md.
   local _short_opt="m:l:f:"
-  local _long_opt="help,mode:,logfile:,filter:"
+  local _long_opt="help,mode:,logfile:,filter:,mailto:"
 
   _GETOPT_PARAMS=$(getopt -o "${_short_opt}" --long "${_long_opt}" \
                    -n "${_init_name}" -- "${__script_params[@]}")
@@ -598,6 +603,16 @@ __main__() {
         export filter_state=1
 
         export filter_type="${2}"
+
+        shift 2 ;;
+
+      --mailto)
+
+        export mailto_state=1
+
+        export mailto_type="${2}"
+
+        MAILTO="$mailto_type"
 
         shift 2 ;;
 
