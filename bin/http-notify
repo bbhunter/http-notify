@@ -665,6 +665,10 @@ __main__() {
 
     std_headers "$mode_type"
 
+    _logger "info" \
+      "${_FUNCTION_ID}()" \
+      "init logrep with '$mode_type' mode"
+
     logrep \
     --config "${_src}/wtop.cfg" \
     --sort '50:1,2,3,4:asc' \
@@ -677,6 +681,10 @@ __main__() {
   elif [[ "$mode_type" == "monitor" ]] ; then
 
     std_headers "$mode_type"
+
+    _logger "info" \
+      "${_FUNCTION_ID}()" \
+      "init logrep with '$mode_type' mode"
 
     logrep \
     --config "${_src}/wtop.cfg" \
@@ -692,6 +700,10 @@ __main__() {
 
   # Remove temporary file.
   rm -fr "$_tmpA"
+
+  _logger "info" \
+    "${_FUNCTION_ID}()" \
+    "remove temporary file: $_tmpA"
 
   # ````````````````````````````````````````````````````````````````````````````
 
