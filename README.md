@@ -31,8 +31,8 @@ cd http-notify
 
 client_ip      cc  proto     code    bytes   path
 ---------      --  -----     ----    -----   ----
-216.58.215.28  PL  HTTP/1.0  200     11429   /index.php/login
-45.233.49.119  PL  HTTP/2.0  200     10522   /admin/login
+216.58.215.28  US  HTTP/1.0  200     11429   /index.php/login
+78.224.23.85   FR  HTTP/2.0  200     10522   /admin/login
 ...
 ```
 
