@@ -2,34 +2,24 @@
 
 <br>
 
+**http-notify** - keep track of all http activities.
+
+<br>
+
 <p align="left">
   <a href="https://img.shields.io/badge/Branch-master-green.svg">
     <img src="https://img.shields.io/badge/Branch-master-green.svg"
         alt="Branch">
   </a>
-  <a href="https://img.shields.io/badge/Version-v1.0.0-lightgrey.svg">
-    <img src="https://img.shields.io/badge/Version-v1.0.0-lightgrey.svg"
-        alt="Version">
-  </a>
   <a href="https://github.com/trimstray/http-notify">
     <img src="https://github.com/trimstray/http-notify.svg?branch=master"
         alt="Travis-CI">
   </a>
-  <a href="http://www.gnu.org/licenses/">
-    <img src="https://img.shields.io/badge/license-GNU-blue.svg"
-        alt="License">
-  </a>
 </p>
 
-<br>
-
-## Description
-
-**http-notify** - keep track of all http activities.
+## How To Use
 
   > Before use **http-notify** please see **[Requirements](#requirements)**.
-
-## How To Use
 
 It's simple:
 
@@ -40,15 +30,9 @@ git clone https://github.com/trimstray/http-notify
 # Go into the repository
 cd http-notify
 
-# Install
-./setup.sh install
-
 # Run the app
 http-notify -m monitor -l /var/log/httpd/access_log -f "login" --mailto admin@example.com
 ```
-
-> * symlink to `bin/http-notify` is placed in `/usr/local/bin`
-> * man page is placed in `/usr/local/man/man8`
 
 ## Requirements
 
@@ -56,6 +40,15 @@ This tool working with:
 
 - **GNU/Linux** (testing on Debian and CentOS)
 - **[Bash](https://www.gnu.org/software/bash/)** (testing on 4.4.19)
+- **[wtop](https://github.com/ClockworkNet/wtop)**
+
+### wtop/logrep installation
+
+`wtop` can be installed from PyPI via pip like so:
+
+```bash
+pip install wtop
+```
 
 ## Parameters
 
