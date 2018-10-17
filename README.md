@@ -31,7 +31,7 @@ git clone https://github.com/trimstray/http-notify
 cd http-notify
 
 # Run the app
-http-notify -m monitor -l /var/log/httpd/access_log -f "login" --mailto admin@example.com
+./bin/http-notify -m monitor -l /var/log/httpd/access_log -f "login" --mailto admin@example.com
 
 client_ip      cc  proto     code    bytes   path
 ---------      --  -----     ----    -----   ----
