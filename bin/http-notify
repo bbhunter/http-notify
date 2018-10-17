@@ -321,6 +321,7 @@ function _help_() {
         -t|--type                             http server type: nginx or apache
         -m|--mode                             mode type: stats or monitor
         -l|--logfile                          path to logfile
+        -f|--filter                           set filter (e.g. by url)
 
 
   This program comes with ABSOLUTELY NO WARRANTY.
@@ -483,8 +484,8 @@ __main__() {
 
   # Specifies the call parameters of the script, the exact description
   # can be found in _help_ and file README.md.
-  local _short_opt="t:m:l:"
-  local _long_opt="help,type:,mode:,logfile:"
+  local _short_opt="t:m:l:u:"
+  local _long_opt="help,type:,mode:,logfile:,url:"
 
   _GETOPT_PARAMS=$(getopt -o "${_short_opt}" --long "${_long_opt}" \
                    -n "${_init_name}" -- "${__script_params[@]}")
@@ -535,6 +536,14 @@ __main__() {
         export log_state=1
 
         export log_type="${2}"
+
+        shift 2 ;;
+
+      -f|--filter)
+
+        export filter_state=1
+
+        export filter_type="${2}"
 
         shift 2 ;;
 
@@ -683,7 +692,8 @@ __main__() {
     --sort '50:1,2,3,4:asc' \
     -q \
     -o 'ip,cc,proto,status,bytes,count(*),url' \
-    "$log_type"
+    "$log_type" | \
+    grep "$filter_type"
 
   elif [[ "$mode_type" == "monitor" ]] ; then
 
@@ -695,7 +705,8 @@ __main__() {
     -q \
     --line-buffered \
     -o 'ip,cc,proto,status,bytes,url' \
-    "$log_type"
+    "$log_type" | \
+    grep "$filter_type"
 
   fi
 
