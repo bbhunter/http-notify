@@ -32,6 +32,7 @@ cd http-notify
 #   - set properly log filename (LOG_FILE)
 
 # Run the app
+#   - for monitor mode
 ./bin/http-notify -m monitor -l /var/log/httpd/access_log -f "login" --mailto admin@example.com
 
 client_ip      cc  proto     code    bytes   path
@@ -39,7 +40,33 @@ client_ip      cc  proto     code    bytes   path
 216.58.215.28  US  HTTP/1.0  200     11429   /index.php/login
 78.224.23.85   FR  HTTP/2.0  200     10522   /admin/login
 ...
+
+#   - for stats mode
+./bin/http-notify -m stats -l /var/log/httpd/access_log
+client_ip       cc      proto           code    bytes   count   path
+---------       --      -----           ----    -----   -----   ----
+10.240.30.3     None    HTTP/1.1        200     1567    14      https://dvwa.nsbox.int/login.php
+10.240.30.3     None    HTTP/1.1        302     0       14      https://dvwa.nsbox.int/
+10.240.30.3     None    HTTP/1.1        404     281     1       https://dvwa.nsbox.int/asdf
+192.168.252.1   None    HTTP/1.1        200     721     1       https://dvwa.nsbox.int/login.php?cache=137115269
+192.168.252.1   None    HTTP/1.1        200     9088    25      https://dvwa.nsbox.int/dvwa/images/login_logo.png
+192.168.252.1   None    HTTP/1.1        200     1405    14      https://dvwa.nsbox.int/setup.php
+192.168.252.1   None    HTTP/1.1        200     722     1       https://dvwa.nsbox.int/login.php?cache=1e885d96a
 ```
+
+<br>
+
+<p align="center">
+    <img src="https://i.imgur.com/RsEy4TU.gif"
+         alt="Master">
+</p>
+
+###### Mail notification
+
+<p align="center">
+    <img src="https://github.com/trimstray/http-notify/blob/master/doc/img/http-notify-mail-report.png"
+        alt="Master">
+</p>
 
 ## Requirements
 
