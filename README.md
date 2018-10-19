@@ -54,16 +54,14 @@ client_ip       cc      proto           code    bytes   count   path
 192.168.252.1   None    HTTP/1.1        200     722     1       https://dvwa.nsbox.int/login.php?cache=1e885d96a
 ```
 
-<br>
-
-###### Preview
+#### Preview
 
 <p align="center">
-    <img src="https://i.imgur.com/XP4xIcT.gif"
+    <img src="https://i.imgur.com/PRhLXNs.gif"
          alt="Master">
 </p>
 
-###### Mail notification
+#### Mail notification
 
 <p align="center">
     <img src="https://github.com/trimstray/http-notify/blob/master/doc/img/http-notify-mail-report.png"
