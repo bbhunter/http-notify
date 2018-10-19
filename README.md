@@ -56,8 +56,10 @@ client_ip       cc      proto           code    bytes   count   path
 
 <br>
 
+###### Preview
+
 <p align="center">
-    <img src="https://i.imgur.com/RsEy4TU.gif"
+    <img src="https://i.imgur.com/XP4xIcT.gif"
          alt="Master">
 </p>
 
